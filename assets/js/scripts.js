@@ -37,9 +37,9 @@ function generatePassword(){
 
 
     // Grab the length of the requested password
-    let charCountRequest = parseInt(window.prompt("Select password length (between 8 and 20)"));
-    while( !Number.isInteger(charCountRequest) || !charCountRequest || charCountRequest < 8 || charCountRequest > 20 ){
-        charCountRequest = parseInt(window.prompt("Invalid Character Amount\nSelect password length (between 8 and 20)"));
+    let charCountRequest = parseInt(window.prompt("Select password length (between 8 and 128)"));
+    while( !Number.isInteger(charCountRequest) || !charCountRequest || charCountRequest < 8 || charCountRequest > 128 ){
+        charCountRequest = parseInt(window.prompt("Invalid Character Amount\nSelect password length (between 8 and 128)"));
     };
     passwordParams.charcount = charCountRequest;
     console.log(`User entered: ${passwordParams.charcount}`);
