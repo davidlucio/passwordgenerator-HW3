@@ -14,7 +14,7 @@ function writePassword() {
 generateBtn.addEventListener("click", writePassword);
 
 const characterchoices = {
-    specials  : " !”#$%&’()*+,-./:;<=>?@[\]^_`{|}~",
+    specials  : "!”#$%&’()*+,-./:;<=>?@[\]^_`{|}~",
     numbers   : "1234567890",
     capitals  : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     lowers    : "abcdefghijklmnopqrstuvwxyz"
@@ -77,11 +77,67 @@ function generatePassword(){
         };
     }
 
-    // Random selector for length of the requested character count
-    for(i = passwordParams.charcount; i > 0; i-- ){
-        passwordCompiled += passwordParams.charbucket.charAt( Math.floor(Math.random() * passwordParams.charbucket.length) );
+    // Compile the password; uses internal validation before it returns a successful password
+    let validator = false;
+    while( !validator ){
+        // Check against these parameters:
+        let typeValidation = passwordParams.typecount,
+        hasLowers = !passwordParams.lowers,
+        hasCapitals = !passwordParams.capitals,
+        hasNumbers = !passwordParams.numbers,
+        hasSpecials = !passwordParams.specials;
+
+        // Empty the password placeholder, in case of failure to meet validation
+        passwordCompiled ="";
+
+        // Random selector for length of the requested character count
+        for(i = passwordParams.charcount; i > 0; i-- ){
+
+            // Grab a character to try and meet the requirements
+            var addCharacter = passwordParams.charbucket.charAt( Math.floor(Math.random() * passwordParams.charbucket.length) );
+
+            // VALIDATION
+            if( !hasLowers && characterchoices.lowers.includes(addCharacter) && typeValidation > 0 ){
+                hasLowers = true;
+                typeValidation--;
+                console.log(`Password includes a Lowercase: ${addCharacter}`);
+            }
+            else if( !hasCapitals && characterchoices.capitals.includes(addCharacter) ){
+                hasCapitals = true;
+                typeValidation--;
+                console.log(`Password includes a Capital: ${addCharacter}`);
+            }
+            else if( !hasNumbers && characterchoices.numbers.includes(addCharacter) ){
+                hasNumbers = true;
+                typeValidation--;
+                console.log(`Password includes a Number: ${addCharacter}`);
+            }
+            else if( !hasSpecials && characterchoices.specials.includes(addCharacter) ){
+                hasSpecials = true;
+                typeValidation--;
+                console.log(`Password includes a Special Character: ${addCharacter}`);
+            }
+            else{
+                console.log(`Skipping: ${addCharacter}`);
+            }
+
+            // Add it to the password string... this doesn't guarantee success!
+            passwordCompiled += addCharacter;
+        }
+
+        // Are we good to go?
+        if( typeValidation === 0 && hasLowers && hasCapitals && hasNumbers && hasSpecials){
+            console.log(`The password meets all requirements!`);
+            validator = true;
+        }
+        else{
+            console.log(`ERROR: Password failed parameter validation.\nRestarting...`);
+        }
+
     }
 
+    // If all validation completes, the final password is returned.
     console.log( passwordCompiled );
+    return(passwordCompiled);
 
 }
